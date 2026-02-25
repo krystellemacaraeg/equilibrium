@@ -1,0 +1,36 @@
+/* Bringing in Tailwind's base reset, component classes, and utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap');
+
+/* Setting a dark base and the custom font stack */
+body {
+  background-color: #0a0c14;
+  color: #e2e8f0;
+  font-family: 'Syne', sans-serif;
+  /* Preventing layout shifts on mobile caused by the scrollbar appearing */
+  overflow-x: hidden;
+}
+
+/* Utility class for the glass card effect - reusing this a lot */
+@layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 1rem;
+  }
+
+  /* Monospace font for any number/amount fields */
+  .font-mono-num {
+    font-family: 'DM Mono', monospace;
+  }
+}
+
+/* Custom scrollbar so it doesn't look ugly on desktop */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
