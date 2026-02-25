@@ -1,16 +1,32 @@
-# React + Vite
+﻿# Equilibrium
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A mobile-first financial ledger with inline math evaluation and real-time balance tracking.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Inline math** - type expressions like `(120 * 5) + 300` directly into amount fields
+- **Real-time balance** - income, expenses, and net balance update as you type
+- **Dynamic status** - visual feedback on financial health from Excellent to Deficit
+- **Persistent storage** - data survives page refreshes via localStorage
+- **Responsive layout** - single column on mobile, two-pane dashboard on desktop
+- **Condensed mode** - hide UI controls for a clean read-only view
+- **Spending breakdown** - donut chart showing expense distribution
+- **Savings rate** - percentage of income saved with contextual advice
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React + Vite
+- Tailwind CSS
+- mathjs
+- Framer Motion
+- Recharts
 
-## Expanding the ESLint configuration
+## Getting Started
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Deployment
+
+Deployed on Vercel. Push to `main` to trigger a redeploy.
