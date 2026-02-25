@@ -1,41 +1,55 @@
 import { motion, AnimatePresence } from "framer-motion";
 import StatCard from "./StatCard";
 import BalanceBar from "./BalanceBar";
+import SpendingChart from "./SpendingChart";
+import SavingsRate from "./SavingsRate";
 import { getStatus } from "../utils/getStatus";
 import { formatCurrency, formatCompact } from "../utils/formatCurrency";
 
 export default function SummaryPane({ ledger, isMobileFooter = false }) {
-  // Pulling the calculated totals out of the ledger object passed down from App
-  const { totalIncome, totalExpenses, balance } = ledger;
+  // Pulling everything needed from the ledger object passed down from App
+  const { totalIncome, totalExpenses, balance, expenses, safeEval } = ledger;
   const status = getStatus(balance, totalIncome, totalExpenses);
 
   // ---- MOBILE FOOTER VERSION ----
-  // Compact single-row layout for the sticky bottom bar on small screens
   if (isMobileFooter) {
     return (
       <div className="bg-[#0a0c14]/95 backdrop-blur-glass border-t border-white/10 px-4 py-3">
         <div className="flex items-center justify-between gap-3">
+
           {/* Status dot + label */}
           <div className="flex items-center gap-2 min-w-0">
             <span
               className="w-2 h-2 rounded-full flex-shrink-0"
               style={{ backgroundColor: status.color }}
             />
-            <span className="text-xs text-white/50 truncate">{status.label}</span>
+            <span className="text-xs text-white/50 truncate">
+              {status.label}
+            </span>
           </div>
 
           {/* Three compact numbers */}
           <div className="flex items-center gap-4 font-mono-num">
             <div className="text-center">
-              <div className="text-[10px] text-white/25 uppercase tracking-wider">In</div>
-              <div className="text-xs text-green-400">{formatCompact(totalIncome)}</div>
+              <div className="text-[10px] text-white/25 uppercase tracking-wider">
+                In
+              </div>
+              <div className="text-xs text-green-400">
+                {formatCompact(totalIncome)}
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-[10px] text-white/25 uppercase tracking-wider">Out</div>
-              <div className="text-xs text-red-400">{formatCompact(totalExpenses)}</div>
+              <div className="text-[10px] text-white/25 uppercase tracking-wider">
+                Out
+              </div>
+              <div className="text-xs text-red-400">
+                {formatCompact(totalExpenses)}
+              </div>
             </div>
             <div className="text-center">
-              <div className="text-[10px] text-white/25 uppercase tracking-wider">Net</div>
+              <div className="text-[10px] text-white/25 uppercase tracking-wider">
+                Net
+              </div>
               <div
                 className="text-xs font-bold"
                 style={{ color: status.color }}
@@ -46,7 +60,7 @@ export default function SummaryPane({ ledger, isMobileFooter = false }) {
           </div>
         </div>
 
-        {/* Mini progress bar even in footer */}
+        {/* Mini balance bar in the footer */}
         <BalanceBar totalIncome={totalIncome} totalExpenses={totalExpenses} />
       </div>
     );
@@ -55,7 +69,8 @@ export default function SummaryPane({ ledger, isMobileFooter = false }) {
   // ---- DESKTOP SIDEBAR VERSION ----
   return (
     <div className="flex flex-col gap-4">
-      {/* Status card - changes color and message based on financial health */}
+
+      {/* Status card - animates when the tier changes */}
       <AnimatePresence mode="wait">
         <motion.div
           key={status.tier}
@@ -67,7 +82,9 @@ export default function SummaryPane({ ledger, isMobileFooter = false }) {
           style={{ borderColor: `${status.color}30` }}
         >
           <div className="flex items-start gap-3">
-            <span className="text-2xl leading-none mt-0.5">{status.emoji}</span>
+            <span className="text-2xl leading-none mt-0.5">
+              {status.emoji}
+            </span>
             <div>
               <p
                 className="text-base font-bold"
@@ -81,14 +98,17 @@ export default function SummaryPane({ ledger, isMobileFooter = false }) {
             </div>
           </div>
 
-          {/* The bar lives inside the status card for visual grouping */}
+          {/* Balance bar inside the status card for visual grouping */}
           <div className="mt-4">
-            <BalanceBar totalIncome={totalIncome} totalExpenses={totalExpenses} />
+            <BalanceBar
+              totalIncome={totalIncome}
+              totalExpenses={totalExpenses}
+            />
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Three stat cards stacked - income, expenses, balance */}
+      {/* Income and expense stat cards */}
       <StatCard
         label="Total Income"
         value={totalIncome}
@@ -102,7 +122,7 @@ export default function SummaryPane({ ledger, isMobileFooter = false }) {
         delay={0.1}
       />
 
-      {/* Balance card has extra emphasis since it's the most important number */}
+      {/* Net balance - biggest and most prominent number on the pane */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -119,7 +139,8 @@ export default function SummaryPane({ ledger, isMobileFooter = false }) {
         >
           {formatCurrency(balance)}
         </span>
-        {/* Showing the surplus/deficit as a percentage of income for context */}
+
+        {/* Showing surplus/deficit as a percentage of income for extra context */}
         {totalIncome > 0 && (
           <span className="text-xs text-white/25 font-mono-num mt-1 block">
             {Math.abs((balance / totalIncome) * 100).toFixed(1)}%{" "}
@@ -127,6 +148,15 @@ export default function SummaryPane({ ledger, isMobileFooter = false }) {
           </span>
         )}
       </motion.div>
+
+      {/* Savings rate card - only renders when income > 0 */}
+      <SavingsRate
+        totalIncome={totalIncome}
+        totalExpenses={totalExpenses}
+      />
+
+      {/* Spending breakdown donut chart */}
+      <SpendingChart expenses={expenses} safeEval={safeEval} />
     </div>
   );
 }
